@@ -59,6 +59,12 @@ def select_bm():
     filename = os.path.basename(readpath)
     currently_reading.config(text=f'Currently reading:\n\t"{filename}"')  
 
+def save_bookmark():
+    global readpath, current_index, filename
+    bm_path = f"bookmarks/{filename}.bm"
+    with open(bm_path, "w", encoding="utf-8") as f:
+        f.write(f"{readpath}\n{current_index}")
+
 def start_reading():
     read_pdf(readpath)
 
@@ -243,6 +249,9 @@ label3.pack(fill="both", expand=True)
 controls_frame = tk.Frame(main_area, bg="white")
 controls_frame.pack(side="bottom", fill="x", pady=20)
 
+buttons_frame = tk.Frame(controls_frame, bg="white")
+buttons_frame.pack(side="top", pady=10)
+
 #pause/play icon
 original_play_icon = tk.PhotoImage(file="icons/play.png")
 original_pause_icon = tk.PhotoImage(file="icons/pause.png")
@@ -253,12 +262,21 @@ pause_icon = original_pause_icon.subsample(4,4)
 is_playing = False
 
 play_pause_btn = tk.Button(
-    controls_frame,
+    buttons_frame,
     image=play_icon,
     command=toggle_play_pause,
     bd=0
 )
-play_pause_btn.pack(pady=40)
+play_pause_btn.pack(side="left",padx=10)
+
+#Bookmark button
+bookmark_btn = tk.Button(
+    buttons_frame,
+    command=save_bookmark,
+    text="Here",
+    bd=0
+)
+bookmark_btn.pack(side="left", padx=10, pady=40)
 
 #Progress bar
 style = ttk.Style()
@@ -275,7 +293,7 @@ progress = tk.ttk.Progressbar(controls_frame,
                               mode = "determinate", 
                               maximum=100,
                               style="Custom.Horizontal.TProgressbar")
-progress.pack(pady=10)
+progress.pack(side="top",pady=10)
 
 
 root.mainloop()
