@@ -39,7 +39,7 @@ def start_reading():
     read_pdf(readpath)
 
 def read_pdf(path):
-    global lines, total_lines, current_index, line1, line2, line3
+    global lines, total_lines, current_index, line1, line2, line3, is_playing
 
     reader = PdfReader(path)
     text = ""
@@ -51,23 +51,25 @@ def read_pdf(path):
     lines = text.splitlines()
     total_lines = len(lines)
 
-    def update_line_window():
-        global line1, line2, line3
+    while current_index < total_lines:
+        if not is_playing:
+            break  # stop if paused
+
+        # Update labels
         line1 = lines[current_index] if current_index < total_lines else ""
         line2 = lines[current_index+1] if current_index+1 < total_lines else ""
         line3 = lines[current_index+2] if current_index+2 < total_lines else ""
-    
-    update_line_window()
+        label1.config(text=line1)
+        label2.config(text=line2)
+        label3.config(text=line3)
 
-    while current_index < total_lines:
+        # Speak current line
         engine.say(lines[current_index])
-        engine.runAndWait()
+        engine.runAndWait()  # <-- blocks, but only for this single line
 
+        # Increment index and update progress
         current_index += 1
-        update_line_window()
-
-        progress_percent = (current_index/total_lines) * 100
-        progress['value'] = progress_percent
+        progress['value'] = (current_index / total_lines) * 100
         root.update_idletasks()
 
 def pause_pdf(path):
@@ -192,9 +194,9 @@ reading_frame.pack(side="top",
                    padx=220)
 
 # Inside the middle frame, add 3 labels
-label1 = tk.Label(reading_frame, text="line1", bg="white", font=("Aptos(Body)", 35), fg="#439FD5")
-label2 = tk.Label(reading_frame, text="line2", bg="white", font=("Aptos(Body)", 35))
-label3 = tk.Label(reading_frame, text="line3", bg="white", font=("Aptos(Body)", 35))
+label1 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35), fg="#439FD5")
+label2 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35))
+label3 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35))
 
 # Pack labels vertically with spacing
 label1.pack(fill="both", expand=True)
