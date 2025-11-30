@@ -2,12 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import ctypes
 from tkinter import filedialog
-import pyttsx3
 from pypdf import PdfReader
 import threading
 import os
+from win32com.client import Dispatch
 
-engine = pyttsx3.init()
+speaker = Dispatch("SAPI.SpVoice")
 
 filename = "No file selected"
 
@@ -64,29 +64,32 @@ def read_pdf(path):
         label3.config(text=line3)
 
         # Speak current line
-        engine.say(lines[current_index])
-        engine.runAndWait()  # <-- blocks, but only for this single line
+        speaker.Speak(lines[current_index],1)
 
+        while speaker.Status.RunningState == 2:
+            if not is_playing:
+                break
+            root.update()
         # Increment index and update progress
         current_index += 1
         progress['value'] = (current_index / total_lines) * 100
         root.update_idletasks()
 
 def pause_pdf(path):
-    global engine
+    global speaker
     try:
-        engine.stop()
+        speaker.Speak("",2)
     except:
         pass
     return
 
 def toggle_play_pause():
-    global is_playing, readpath
+    global is_playing, readpath, speaker
 
     if is_playing:
         play_pause_btn.config(image=play_icon)
         is_playing = False
-        engine.stop()
+        speaker.Speak("",2)
         return
 
     else:
