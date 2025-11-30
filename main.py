@@ -6,6 +6,7 @@ from pypdf import PdfReader
 import threading
 import os
 from win32com.client import Dispatch
+import time
 
 speaker = Dispatch("SAPI.SpVoice")
 
@@ -63,8 +64,16 @@ def read_pdf(path):
         label2.config(text=line2)
         label3.config(text=line3)
 
+        current_line = lines[current_index]
+        current_words = current_line.split()
+        words = len(current_words)
+        sleep_time = words / (2)
+
+
         # Speak current line
         speaker.Speak(lines[current_index],1)
+        time.sleep(sleep_time)
+        speaker.Speak("",2) 
 
         while speaker.Status.RunningState == 2:
             if not is_playing:
