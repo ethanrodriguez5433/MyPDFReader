@@ -36,6 +36,29 @@ def select_pdf():
     filename = os.path.basename(filepath)
     currently_reading.config(text=f'Currently reading:\n\t"{filename}"')
 
+def select_bm():
+    global readpath, filename, current_index
+    filepath = filedialog.askopenfilename(
+        filetypes=[("BM Files", "*.bm")]
+    )
+    if not filepath:
+        return
+    with open(filepath, "r", encoding="utf-8") as f:
+        lines = f.read().splitlines()
+    if len(lines) != 2:
+        print("invalid .bm file format")
+        return
+
+    readpath = lines[0].strip()
+
+    try:
+        current_index = int(lines[1].strip())
+    except ValueError:
+        current_index = 0
+
+    filename = os.path.basename(readpath)
+    currently_reading.config(text=f'Currently reading:\n\t"{filename}"')  
+
 def start_reading():
     read_pdf(readpath)
 
@@ -160,7 +183,7 @@ bookmarkicon = tk.PhotoImage(file="icons/bookmarkicon.png")
 boomarkbutton = tk.Button(
     sidebar,
     image=bookmarkicon,
-    command=select_pdf,
+    command=select_bm,
     bg="#C1E5F5",
     fg="black",
     activebackground="#439FD5",
