@@ -65,6 +65,8 @@ def save_bookmark():
     with open(bm_path, "w", encoding="utf-8") as f:
         f.write(f"{readpath}\n{current_index}")
 
+    bookmark_btn.config(image=bookmarkedyes_icon)
+
 def start_reading():
     read_pdf(readpath)
 
@@ -175,7 +177,6 @@ select_frame = tk.Frame(sidebar, bg="#C1E5F5")
 select_frame.pack(fill="both", expand=True, padx=0, pady=0)
 
 selecticon = tk.PhotoImage(file="icons/selecticon.png")
-#selecticon = selecticon.subsample(2,2)
 selectbutton = tk.Button(
     select_frame,
     command=select_pdf,
@@ -243,9 +244,9 @@ reading_frame.pack(side="top",
                    padx=220)
 
 # Inside the middle frame, add 3 labels
-label1 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35), fg="#439FD5")
-label2 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35))
-label3 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35))
+label1 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35), fg="#439FD5", wraplength=1000)
+label2 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35), wraplength=1000)
+label3 = tk.Label(reading_frame, text="", bg="white", font=("Aptos(Body)", 35), wraplength=1000)
 
 # Pack labels vertically with spacing
 label1.pack(fill="both", expand=True)
@@ -280,6 +281,9 @@ play_pause_btn.pack(side="left",padx=10)
 #Bookmark button
 original_bookmarked_icon = tk.PhotoImage(file="icons/bookmarked.png")
 bookmarked_icon = original_bookmarked_icon.subsample(4,4)
+
+original_bookmarkedyes_icon = tk.PhotoImage(file="icons/bookmarkedyes.png")
+bookmarkedyes_icon = original_bookmarkedyes_icon.subsample(4,4)
 bookmark_btn = tk.Button(
     buttons_frame,
     command=save_bookmark,
