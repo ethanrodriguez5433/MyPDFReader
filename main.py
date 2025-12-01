@@ -12,7 +12,7 @@ speaker = Dispatch("SAPI.SpVoice")
 
 filename = "No file selected"
 
-current_index = 0
+current_index = 0 
 total_lines = 0
 line1 = "" 
 line2= ""
@@ -103,17 +103,21 @@ def read_pdf(path):
 
         # Speak current line
         speaker.Speak(lines[current_index],1)
-        time.sleep(sleep_time)
-        speaker.Speak("",2) 
+        time.sleep(sleep_time) 
 
         while speaker.Status.RunningState == 2:
             if not is_playing:
-                break
+                speaker.Speak("",2)
+                return
             root.update()
+        if not is_playing:
+            return
         # Increment index and update progress
         current_index += 1
         progress['value'] = (current_index / total_lines) * 100
         root.update_idletasks()
+    toggle_play_pause()
+    current_index = 0
 
 def pause_pdf(path):
     global speaker
@@ -188,7 +192,7 @@ selectbutton = tk.Button(
     bd=0
 )
 selectbutton.image = selecticon
-selectbutton.pack(fill="both", expand=True)
+selectbutton.pack(fill="both", expand=True, padx=30)
 
 bm_frame = tk.Frame(sidebar, bg="#C1E5F5")
 bm_frame.pack(fill="both", expand=True, padx=0, pady=0)
@@ -273,6 +277,7 @@ is_playing = False
 play_pause_btn = tk.Button(
     buttons_frame,
     image=play_icon,
+    bg="white",
     command=toggle_play_pause,
     bd=0
 )
@@ -286,6 +291,7 @@ original_bookmarkedyes_icon = tk.PhotoImage(file="icons/bookmarkedyes.png")
 bookmarkedyes_icon = original_bookmarkedyes_icon.subsample(4,4)
 bookmark_btn = tk.Button(
     buttons_frame,
+    bg="white",
     command=save_bookmark,
     image=bookmarked_icon,
     bd=0
