@@ -60,6 +60,32 @@ def select_bm():
     filename = os.path.basename(readpath)
     label_filename.config(text=f'\t"{filename}"', fg="black")  
 
+import tkinter as tk
+
+def flash_popup(message, parent):
+    popup = tk.Toplevel(parent)
+    popup.overrideredirect(True)         # Remove window border
+    popup.attributes("-topmost", True)   # Keep on top
+    popup.configure(bg="white")
+
+    # Position popup near bottom-right of parent
+    parent_x = parent.winfo_rootx()
+    parent_y = parent.winfo_rooty()
+    popup.geometry(f"+{parent_x + 1300}+{parent_y + 900}")
+
+    label = tk.Label(
+        popup,
+        text=message,
+        bg="white",
+        fg="#439FD5",
+        font=("Aptos(Body)", 20, "bold"),
+        padx=20, pady=10,
+    )
+    label.pack()
+
+    # Auto-destroy after 1 second
+    popup.after(3000, popup.destroy)
+
 def save_bookmark():
     global readpath, current_index, filename
     bm_path = f"bookmarks/{filename}.bm"
@@ -67,6 +93,7 @@ def save_bookmark():
         f.write(f"{readpath}\n{current_index}")
 
     bookmark_btn.config(image=bookmarkedyes_icon)
+    flash_popup(f"Bookmark saved at line {current_index+1}!!", root)
 
 def start_reading():
     read_pdf(readpath)
@@ -178,7 +205,8 @@ sidebar.pack_propagate(True)
 # -----------------------------------------
 # TWO BUTTONS THAT AUTO-FILL VERTICALLY
 # -----------------------------------------
-select_frame = tk.Frame(sidebar, bg="#C1E5F5")
+select_frame = tk.Frame(sidebar, bg="#C1E5F5",highlightbackground="black",
+    highlightthickness=10)
 select_frame.pack(fill="both", expand=True, padx=0, pady=0)
 
 selecticon = tk.PhotoImage(file="icons/selecticon.png")
@@ -195,7 +223,8 @@ selectbutton = tk.Button(
 selectbutton.image = selecticon
 selectbutton.pack(fill="both", expand=True, padx=30)
 
-bm_frame = tk.Frame(sidebar, bg="#C1E5F5")
+bm_frame = tk.Frame(sidebar, bg="#C1E5F5",highlightbackground="black",
+    highlightthickness=10)
 bm_frame.pack(fill="both", expand=True, padx=0, pady=0)
 
 bookmarkicon = tk.PhotoImage(file="icons/bookmarkicon.png")
