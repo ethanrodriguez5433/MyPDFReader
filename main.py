@@ -11,6 +11,7 @@ import time
 speaker = Dispatch("SAPI.SpVoice")
 
 filename = "No file selected"
+bookmark_active = False
 
 current_index = 0 
 total_lines = 0
@@ -35,6 +36,7 @@ def select_pdf():
 
     filename = os.path.basename(filepath)
     label_filename.config(text=f'\t"{filename}"', fg="black")
+    label2.config(text="Press play to begin reading")
 
 def select_bm():
     global readpath, filename, current_index
@@ -58,14 +60,13 @@ def select_bm():
         current_index = 0
 
     filename = os.path.basename(readpath)
-    label_filename.config(text=f'\t"{filename}"', fg="black")  
-
-import tkinter as tk
+    label_filename.config(text=f'\t"{filename}"', fg="black") 
+    label2.config(text="Press play to begin reading") 
 
 def flash_popup(message, parent):
     popup = tk.Toplevel(parent)
-    popup.overrideredirect(True)         # Remove window border
-    popup.attributes("-topmost", True)   # Keep on top
+    popup.overrideredirect(True)        
+    popup.attributes("-topmost", True) 
     popup.configure(bg="white")
 
     # Position popup near bottom-right of parent
@@ -83,8 +84,8 @@ def flash_popup(message, parent):
     )
     label.pack()
 
-    # Auto-destroy after 1 second
-    popup.after(3000, popup.destroy)
+    # Auto-destroy after 3 seconds
+    #popup.after(3000, popup.destroy)
 
 def save_bookmark():
     global readpath, current_index, filename
@@ -142,10 +143,14 @@ def read_pdf(path):
             return
         # Increment index and update progress
         current_index += 1
+        bookmark_btn.config(image=bookmarked_icon)
         progress['value'] = (current_index / total_lines) * 100
         root.update_idletasks()
     toggle_play_pause()
     current_index = 0
+    label1.config(text="")
+    label2.config(text="End of PDF has been reached.\nPress play to start from beginning.")
+    label3.config(text="")
 
 def pause_pdf(path):
     global speaker
