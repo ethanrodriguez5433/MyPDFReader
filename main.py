@@ -11,7 +11,7 @@ import time
 speaker = Dispatch("SAPI.SpVoice")
 
 filename = "No file selected"
-bookmark_active = False
+bookmark_popup = None
 
 current_index = 0 
 total_lines = 0
@@ -27,6 +27,8 @@ lines = []
 def select_pdf():
     global readpath
     global filename
+    global bookmark_popup
+
     filepath = filedialog.askopenfilename(
         filetypes=[("PDF Files", "*.pdf")]
     )
@@ -38,8 +40,13 @@ def select_pdf():
     label_filename.config(text=f'\t"{filename}"', fg="black")
     label2.config(text="Press play to begin reading")
 
+    if bookmark_popup is not None and bookmark_popup.winfo_exists():
+        bookmark_popup.destroy()
+        bookmark_popup = None
+
 def select_bm():
-    global readpath, filename, current_index
+    global readpath, filename, current_index, bookmark_popup
+
     filepath = filedialog.askopenfilename(
         initialdir="bookmarks",
         filetypes=[("BM Files", "*.bm")]
@@ -61,21 +68,33 @@ def select_bm():
 
     filename = os.path.basename(readpath)
     label_filename.config(text=f'\t"{filename}"', fg="black") 
-    label2.config(text="Press play to begin reading") 
+    label1.config(text="")
+    label2.config(text=f"Press play to begin reading from line {current_index+1}") 
+    label3.config(text="")
+
+    if bookmark_popup is not None and bookmark_popup.winfo_exists():
+        bookmark_popup.destroy()
+        bookmark_popup = None
+        
 
 def flash_popup(message, parent):
-    popup = tk.Toplevel(parent)
-    popup.overrideredirect(True)        
-    popup.attributes("-topmost", True) 
-    popup.configure(bg="white")
+    global bookmark_popup
+
+    if bookmark_popup is not None and bookmark_popup.winfo_exists():
+        bookmark_popup.destroy()
+
+    bookmark_popup = tk.Toplevel(parent)
+    bookmark_popup.overrideredirect(True)        
+    bookmark_popup.attributes("-topmost", True) 
+    bookmark_popup.configure(bg="white")
 
     # Position popup near bottom-right of parent
     parent_x = parent.winfo_rootx()
     parent_y = parent.winfo_rooty()
-    popup.geometry(f"+{parent_x + 1300}+{parent_y + 900}")
+    bookmark_popup.geometry(f"+{parent_x + 1300}+{parent_y + 900}")
 
     label = tk.Label(
-        popup,
+        bookmark_popup,
         text=message,
         bg="white",
         fg="#439FD5",
@@ -172,6 +191,7 @@ def toggle_play_pause():
     else:
         if "readpath" not in globals():
             print("No PDF selected yet.")
+            tk.messagebox.showwarning("No file selected", "Please select a file before pressing play.")
             return
         play_pause_btn.config(image=pause_icon)
         is_playing = True
