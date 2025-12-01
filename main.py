@@ -162,7 +162,7 @@ root.tk.call('tk','scaling', 1.3)
 ###########################################
 # LEFT SIDEBAR (fixed width, full height)
 ###########################################
-sidebar = tk.Frame(root, bg="#d9d9d9", width=550)
+sidebar = tk.Frame(root, bg="#d9d9d9", width=700)
 sidebar.pack(side="left", fill="y")
 
 
@@ -171,23 +171,31 @@ sidebar.pack_propagate(True)
 # -----------------------------------------
 # TWO BUTTONS THAT AUTO-FILL VERTICALLY
 # -----------------------------------------
+select_frame = tk.Frame(sidebar, bg="#C1E5F5")
+select_frame.pack(fill="both", expand=True, padx=0, pady=0)
+
 selecticon = tk.PhotoImage(file="icons/selecticon.png")
+#selecticon = selecticon.subsample(2,2)
 selectbutton = tk.Button(
-    sidebar,
+    select_frame,
     command=select_pdf,
     image = selecticon,
     bg="#C1E5F5",
     fg="black",
     activebackground="#439FD5",
     activeforeground="white",
-    bd=0                   #(flat look)
+    bd=0
 )
 selectbutton.image = selecticon
 selectbutton.pack(fill="both", expand=True)
 
+bm_frame = tk.Frame(sidebar, bg="#C1E5F5")
+bm_frame.pack(fill="both", expand=True, padx=0, pady=0)
+
 bookmarkicon = tk.PhotoImage(file="icons/bookmarkicon.png")
+bookmarkicon = bookmarkicon.subsample(2,2)
 boomarkbutton = tk.Button(
-    sidebar,
+    bm_frame,
     image=bookmarkicon,
     command=select_bm,
     bg="#C1E5F5",
@@ -196,7 +204,7 @@ boomarkbutton = tk.Button(
     activeforeground="white",
     bd=0)
 boomarkbutton.image=bookmarkicon
-boomarkbutton.pack(fill="both", expand=True)
+boomarkbutton.pack(fill="y", expand=True)
 
 ############################################
 # MAIN AREA
@@ -256,8 +264,8 @@ buttons_frame.pack(side="top", pady=10)
 original_play_icon = tk.PhotoImage(file="icons/play.png")
 original_pause_icon = tk.PhotoImage(file="icons/pause.png")
 
-play_icon = original_play_icon.subsample(4,4)
-pause_icon = original_pause_icon.subsample(4,4)
+play_icon = original_play_icon.subsample(2,2)
+pause_icon = original_pause_icon.subsample(2,2)
 
 is_playing = False
 
@@ -270,10 +278,12 @@ play_pause_btn = tk.Button(
 play_pause_btn.pack(side="left",padx=10)
 
 #Bookmark button
+original_bookmarked_icon = tk.PhotoImage(file="icons/bookmarked.png")
+bookmarked_icon = original_bookmarked_icon.subsample(4,4)
 bookmark_btn = tk.Button(
     buttons_frame,
     command=save_bookmark,
-    text="Here",
+    image=bookmarked_icon,
     bd=0
 )
 bookmark_btn.pack(side="left", padx=10, pady=40)
