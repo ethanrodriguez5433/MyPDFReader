@@ -34,11 +34,12 @@ def select_pdf():
     readpath = filepath
 
     filename = os.path.basename(filepath)
-    currently_reading.config(text=f'Currently reading:\n\t"{filename}"')
+    label_filename.config(text=f'\t"{filename}"', fg="black")
 
 def select_bm():
     global readpath, filename, current_index
     filepath = filedialog.askopenfilename(
+        initialdir="bookmarks",
         filetypes=[("BM Files", "*.bm")]
     )
     if not filepath:
@@ -57,7 +58,7 @@ def select_bm():
         current_index = 0
 
     filename = os.path.basename(readpath)
-    currently_reading.config(text=f'Currently reading:\n\t"{filename}"')  
+    label_filename.config(text=f'\t"{filename}"', fg="black")  
 
 def save_bookmark():
     global readpath, current_index, filename
@@ -223,14 +224,30 @@ main_area.pack(side="right", fill="both", expand=True)
 information_frame = tk.Frame(main_area, bg="white")
 information_frame.pack(side="top", fill="x", pady=20)
 
-currently_reading = tk.Label(information_frame,
-                             text=f"Currently reading:\n\tNo file currently selected",
-                             bg="White",
-                             font=("Aptos(Body)",50,"bold"),
-                             anchor="w",
-                             justify="left",
-                             padx=50)
-currently_reading.pack(fill="x")
+currently_reading_frame = tk.Frame(information_frame, bg="white")
+currently_reading_frame.pack(fill="x")
+
+label_title = tk.Label(
+    currently_reading_frame,
+    text="Currently reading:",
+    bg="white",
+    font=("Aptos(Body)", 50, "bold"),
+    anchor="w",
+    justify="left"
+)
+label_title.pack(anchor="w", padx=(50, 10))
+
+label_filename = tk.Label(
+    currently_reading_frame,
+    text="\tNo file currently selected",
+    bg="white",
+    fg="red",    
+    font=("Aptos(Body)", 50, "bold"),
+    anchor="w",
+    justify="left"
+)
+label_filename.pack(anchor="w", padx=70)
+
 
 # -------------------------------------------
 # Reading Frame
