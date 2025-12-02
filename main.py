@@ -38,7 +38,10 @@ def select_pdf():
 
     filename = os.path.basename(filepath)
     label_filename.config(text=f'\t"{filename}"', fg="black")
+    label1.config(text="")
     label2.config(text="Press play to begin reading")
+    label3.config(text="")
+    progress['value'] = 0
 
     if bookmark_popup is not None and bookmark_popup.winfo_exists():
         bookmark_popup.destroy()
@@ -71,6 +74,7 @@ def select_bm():
     label1.config(text="")
     label2.config(text=f"Press play to begin reading from line {current_index+1}") 
     label3.config(text="")
+    #progress['value'] = (current_index / total_lines) * 100
 
     if bookmark_popup is not None and bookmark_popup.winfo_exists():
         bookmark_popup.destroy()
@@ -243,7 +247,8 @@ selectbutton = tk.Button(
     fg="black",
     activebackground="#439FD5",
     activeforeground="white",
-    bd=0
+    bd=0, 
+    takefocus=True
 )
 selectbutton.image = selecticon
 selectbutton.pack(fill="both", expand=True, padx=30)
@@ -262,7 +267,8 @@ boomarkbutton = tk.Button(
     fg="black",
     activebackground="#439FD5",
     activeforeground="white",
-    bd=0)
+    bd=0, 
+    takefocus=True)
 boomarkbutton.image=bookmarkicon
 boomarkbutton.pack(fill="y", expand=True)
 
@@ -350,7 +356,8 @@ play_pause_btn = tk.Button(
     image=play_icon,
     bg="white",
     command=toggle_play_pause,
-    bd=0
+    bd=0, 
+    takefocus=True
 )
 play_pause_btn.pack(side="left",padx=10)
 
@@ -365,7 +372,8 @@ bookmark_btn = tk.Button(
     bg="white",
     command=save_bookmark,
     image=bookmarked_icon,
-    bd=0
+    bd=0, 
+    takefocus=True
 )
 bookmark_btn.pack(side="left", padx=10, pady=40)
 
